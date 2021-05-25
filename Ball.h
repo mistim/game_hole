@@ -6,7 +6,7 @@
 class Ball
 {
 public:
-	Ball(int position, wchar_t color, wchar_t type);
+	Ball(int position, wchar_t color, char type);
 
 	// символ белого шара
 	static const wchar_t ColorWhite = 0x25CF;
@@ -26,11 +26,9 @@ public:
 	// получение позиции
 	int GetPosition();
 	// получение типа
-	wchar_t GetType();
+	char GetType();
 	// отрисовка
 	void Draw(Canvas& canvas);
-	// перемещение шара
-	void Move();
 	// мигание активным шаром
 	void BlinkActive(double dt);
 	// востановление цвета примигании
@@ -39,18 +37,18 @@ public:
 private:
 	// позиция шара
 	int p_Position;
+	// тип
+	char p_Type;
 	// цвет шара
 	wchar_t p_Color;
-	// тип
-	wchar_t p_Type;
-	// время последнего обновления, используется для мигания активного шара
-	double p_TimeFromLastUpdate = 0;
 	// цвет, который имел шар до начала мигания
 	wchar_t p_ColorRestore;
+	// время последнего обновления, используется для мигания активного шара
+	double p_TimeFromLastUpdate = 0;
 	// флаг мигания, используется для смены символа активного шара при мигании
 	bool p_BlinkFlag = true;
 
 	// усстановка цвета
-	void SetColor(wchar_t color);
+	void p_SetColor(wchar_t color);
 };
 

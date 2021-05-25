@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 #include "Game.h"
 #include "GameField.h"
 #include "Canvas.h"
@@ -25,20 +26,20 @@ private:
 	int p_NumHoles;
 	// количество шаров каждого цвета
 	int p_NumBalls;
-	// активный игрок
-	char p_ActivePalyer;
-	// активный белый шар
+	// позиция пустой лунки
+	int p_StartPosEmptyHole;
+	// активный игрок (белые или черные шары)
+	char p_ActivePlayer;
+	// позиция активного белого шара
 	int p_ActiveWhiteBall = 0;
-	// активный черный шар
+	// позиция активного черного шара
 	int p_ActiveBlackBall = 0;
 	// минимальная позиция шара
 	int p_MinPosition = 0;
 	// максимальная позиция шара
 	int p_MaxPosition = 0;
-	int p_MinPositionWhite = 0;
-	int p_MaxPositionWhite = 0;
-	int p_MinPositionBlack = 0;
-	int p_MaxPositionBlack = 0;
+	// победитель
+	char p_Winner;
 	// игровое поле
 	GameField p_GameField;
 	Canvas p_Canvas;
@@ -47,13 +48,15 @@ private:
 	// пустая лунка
 	Ball p_EmptyHole;
 
-	// смена активного шара, который собираемся перемещать
-	void ChangeActiveBall(wchar_t direction, wchar_t type, int &active_position);
-	// перемешение активного шара
-	void MoveBall(int active_position);
-
-	// debug
-	int d_PrevPosition = 0;
-	int d_IterPosition = 0;
+	// выбор шара, который собираемся перемещать
+	void p_ChangeActiveBall(wchar_t direction, int &active_position);
+	// перемещение выбранного шара
+	void p_MoveBall(int active_position);
+	// пересортировка перечня шаров, необходима для того, что бы правильно менять активный шар
+	void p_ReSort();
+	// проверка, если ли победитель
+	bool p_ThereIsWinner();
+	// обновление стартовых параметров
+	void p_Reset();
 };
 
