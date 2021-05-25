@@ -58,18 +58,16 @@ void GameHoles::OnKeyPressed(int btnCode)
 {
 	// текущая позиция активного шара, используется ссылка для сохранения изминения позиции
 	int& active_position = p_ActivePalyer == Ball::White ? p_ActiveWhiteBall : p_ActiveBlackBall;
-	int min = p_MinPosition;
-	int max = p_MaxPosition;
 	wchar_t type = p_ActivePalyer == Ball::White ? Ball::White : Ball::Black;
 
 	// перечень обрабатываемых
 	switch (btnCode)
 	{
 	case 75: // нажатие стрелки влево - смена активного шара
-		ChangeActiveBall('l', type, active_position, min, max);
+		ChangeActiveBall('l', type, active_position);
 		break;
 	case 77: // нажатие стрелки вправо - смена активного шара
-		ChangeActiveBall('r', type, active_position, min, max);
+		ChangeActiveBall('r', type, active_position);
 		break;
 	case 32: // нажатие пробела - перемещение активного шара на место пустой лунки
 		MoveBall(active_position);
@@ -98,6 +96,14 @@ void GameHoles::Update(double dt)
 	// отрисовка пустой лунки
 	p_EmptyHole.Draw(p_Canvas);
 
+	// debug
+	p_Canvas.SetChar(1, 2, p_ActivePalyer);
+	p_Canvas.SetChar(2, 2, 0x003A);
+	p_Canvas.SetChar(3, 2, Ball::ColorEmpty);
+	p_Canvas.SetNumber(4, 2, p_ActivePalyer == Ball::White ? p_ActiveWhiteBall : p_ActiveBlackBall);
+	p_Canvas.SetNumber(8, 2, d_IterPosition);
+	p_Canvas.SetNumber(12, 2, d_PrevPosition);
+
 	// рендеринг всего в консоль
 	p_Canvas.Render();
 }
@@ -107,7 +113,7 @@ bool GameHoles::End()
 	return false;
 }
 
-void GameHoles::ChangeActiveBall(wchar_t direction, wchar_t type, int& active_position, int min, int max)
+void GameHoles::ChangeActiveBall(wchar_t direction, wchar_t type, int& active_position)
 {
 	int prev_position_wite = 0;
 	int prev_position_black = 0;
@@ -148,7 +154,7 @@ void GameHoles::ChangeActiveBall(wchar_t direction, wchar_t type, int& active_po
 			// при достищении текущего активного шара, выбираем предыдущий шар нужного цвета
 			if (ball.GetType() == type && ball.GetPosition() == active_position) {
 				if (ball.GetType() == Ball::White)
-					active_position = prev_position_wite < min ? ball.GetPosition() : prev_position_wite;
+					active_position = prev_position_wite < p_MinPosition ? ball.GetPosition() : prev_position_wite;
 
 				if (ball.GetType() == Ball::Black)
 					active_position = prev_position_black > 0 ? prev_position_black : ball.GetPosition();
@@ -182,12 +188,10 @@ void GameHoles::MoveBall(int active_position)
 			ball.SetPosition(p_EmptyHole.GetPosition());
 			ball.RestoreColor();
 			p_EmptyHole.SetPosition(position);
+			position = 0;
 
 			// смена игрока, если ходили белые, теперь будут ходить черные и наоборот
-			if (p_ActivePalyer == Ball::White)
-				p_ActivePalyer = Ball::Black;
-			else
-				p_ActivePalyer = Ball::White;
+			p_ActivePalyer = p_ActivePalyer == Ball::White ? Ball::Black : Ball::White;
 
 			// выход из перебора
 			break;
@@ -204,10 +208,12 @@ void GameHoles::MoveBall(int active_position)
 		// при достижении позиции после пустой лунки...
 		if (ball.GetPosition() > p_EmptyHole.GetPosition())
 		{
+			d_IterPosition = ball.GetPosition();
 			// ...для белых шаров выбираем предыдущий шар который был непосредственно перед лункой
 			if (p_ActivePalyer == Ball::White)
 			{
 				p_ActiveWhiteBall = prev_position;
+				prev_position = 0;
 				break;
 			}
 
@@ -222,6 +228,7 @@ void GameHoles::MoveBall(int active_position)
 		// запоминаем предыдущую позицию белого шара
 		if (ball.GetType() == Ball::White) {
 			prev_position = ball.GetPosition();
+			d_PrevPosition = prev_position;
 		}		
 	}
 }

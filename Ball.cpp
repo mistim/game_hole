@@ -21,6 +21,38 @@ void Ball::SetColor(wchar_t color)
 void Ball::Draw(Canvas& canvas)
 {
 	canvas.SetChar(p_Position, 1, p_Color);
+	//wchar_t c;
+	/*switch (p_Position)
+	{
+	case 2:
+		c = p_Type == 'W' ? 0x2461 : 0x2777;
+		break;
+	case 4:
+		c = p_Type == 'W' ? 0x2463 : 0x2779;
+		break;
+	case 6:
+		c = p_Type == 'W' ? 0x2465 : 0x277B;
+		break;
+	case 8:
+		c = p_Type == 'W' ? 0x2467 : 0x277D;
+		break;
+	case 10:
+		c = p_Type == 'W' ? 0x2469 : 0x277F;
+		break;
+	case 12:
+		c = p_Type == 'W' ? 0x246B : 0x24EC;
+		break;
+	case 14:
+		c = p_Type == 'W' ? 0x246D : 0x24EE;
+		break;
+	case 16:
+		c = p_Type == 'W' ? 0x246F : 0x24F0;
+		break;
+	case 18:
+		c = p_Type == 'W' ? 0x2471 : 0x24F2;
+		break;
+	}
+	canvas.SetChar(p_Position, 1, c);*/
 }
 
 void Ball::Move()
@@ -34,8 +66,8 @@ void Ball::BlinkActive(double dt)
 {
 	p_TimeFromLastUpdate += dt;
 
-	// каждые 0,4 секунды происходит смена символа (цвета) активного шара
-	if (p_TimeFromLastUpdate >= 400) {
+	// каждые N секунды происходит смена символа (цвета) активного шара
+	if (p_TimeFromLastUpdate >= 250) {
 		if (p_BlinkFlag)
 			p_Color = ColorEmpty;
 		else

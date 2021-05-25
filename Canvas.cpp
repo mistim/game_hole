@@ -6,11 +6,12 @@ void SetFont() {
 	CONSOLE_FONT_INFOEX cfi;
 	cfi.cbSize = sizeof cfi;
 	cfi.nFont = 0;
-	cfi.dwFontSize.X = 30;
+	cfi.dwFontSize.X = 33;
 	cfi.dwFontSize.Y = 60;
 	cfi.FontFamily = FF_DONTCARE;
 	cfi.FontWeight = FW_NORMAL;
 	//wcscpy_s(cfi.FaceName, L"Lucida Console");
+	//wcscpy_s(cfi.FaceName, L"CIRCLED DIGIT ONE");
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 }
 
@@ -55,7 +56,7 @@ void Canvas::Resize(int width, int height)
 
 	if (m_Buffer) delete[] m_Buffer;
 
-	m_Buffer = new CHAR_INFO[height * width];
+	m_Buffer = new CHAR_INFO[width * height];
 	m_BufferSize.X = width;
 	m_BufferSize.Y = height;
 	m_BufferCoord.X = 0;
@@ -91,6 +92,21 @@ void Canvas::SetColorText(int color)
 {
 	//FlushConsoleInputBuffer(m_ConsoleOut);
 	SetConsoleTextAttribute(m_ConsoleOut, color);
+}
+
+void Canvas::SetText(int x, int y, std::string text)
+{
+	for (size_t i = 0; i < text.size(); ++i)
+	{
+		SetChar(x++, y, text[i]);
+	}
+}
+
+void Canvas::SetNumber(int x, int y, int number)
+{
+	std::string text = std::to_string(number);
+
+	SetText(x, y, text);
 }
 
 void Canvas::Clear()

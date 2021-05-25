@@ -26,7 +26,7 @@ private:
 	// количество шаров каждого цвета
 	int p_NumBalls;
 	// активный игрок
-	int p_ActivePalyer;
+	char p_ActivePalyer;
 	// активный белый шар
 	int p_ActiveWhiteBall = 0;
 	// активный черный шар
@@ -48,8 +48,12 @@ private:
 	Ball p_EmptyHole;
 
 	// смена активного шара, который собираемся перемещать
-	void ChangeActiveBall(wchar_t direction, wchar_t type, int &active_position, int min, int max);
+	void ChangeActiveBall(wchar_t direction, wchar_t type, int &active_position);
 	// перемешение активного шара
 	void MoveBall(int active_position);
+
+	// debug
+	int d_PrevPosition = 0;
+	int d_IterPosition = 0;
 };
 
