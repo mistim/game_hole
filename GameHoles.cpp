@@ -106,7 +106,6 @@ void GameHoles::p_ChangeActiveBall(wchar_t direction, int& active_position)
 		// перебираем все шары
 		for (Ball ball : p_Balls)
 		{
-			d_IterPosition = ball.GetPosition();
 			// допустивый диапазон, исключающий перемещение шара назад
 			bool access_position = p_ActivePlayer == Ball::White
 				// для белых - вибирать можно только те которые находятся слева от лунки
@@ -120,8 +119,6 @@ void GameHoles::p_ChangeActiveBall(wchar_t direction, int& active_position)
 				active_position = ball.GetPosition();
 				break;
 			}
-
-			d_PrevPosition = ball.GetPosition();
 		}
 	}
 	// стрелка вправо
